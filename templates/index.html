@@ -77,57 +77,85 @@
 </head>
 <body>
 
-<p>Usuario: <b>{{ username }}</b> | <a href="/logout">Salir</a></p>
+<p>
+  Usuario: <b>{{ username }}</b>
+  | <a href="/logout">Salir</a>
+</p>
 
-<a href="/historial">Ver historial</a>
+<p>
+  <a href="/historial">Ver historial</a>
+  {% if current_user and current_user["is_admin"] %}
+    | <a href="/admin/usuarios">Crear usuarios</a>
+  {% endif %}
+</p>
+
+
 
   <div class="box">
 
     <h1>Voz a Texto</h1>
 
-    <form id="form" action="/transcribir" method="post" enctype="multipart/form-data">
-      <div id="dropzone" class="dropzone">
-        Arrastra tu audio aquí<br>
-        <small>o haz click para egi-seleccionar</small>
-      </div>
+<form id="form" action="/transcribir" method="post" enctype="multipart/form-data">
+  <div id="dropzone" class="dropzone">
+    Arrastra tu audio aquí<br>
+    <small>o haz click para seleccionar</small>
+  </div>
 
-      <input type="file" name="audio" id="fileInput" accept=".wav, .mp3, .m4a, .flac, .ogg, .webm" required>
+  <input type="file" name="audio" id="fileInput" accept=".wav, .mp3, .m4a, .flac, .ogg, .webm" required>
 
-      <label for="description">Descripción</label>
-<input
-  type="text"
-  name="description"
-  id="description"
-  placeholder="Paciente1"
-  style="width:100%; padding:10px; margin-bottom:12px; box-sizing:border-box;"
->
+  <label for="exam_date">Fecha del examen a transcribir</label>
+  <input
+    type="date"
+    name="exam_date"
+    id="exam_date"
+    style="width:100%; padding:10px; margin-bottom:12px; box-sizing:border-box;"
+  >
 
-<label for="speaker">Hablador</label>
-<input
-  type="text"
-  name="speaker"
-  id="speaker"
-  placeholder="Ej: Dr. Rad"
-  style="width:100%; padding:10px; margin-bottom:12px; box-sizing:border-box;"
->
+  <label for="modality">Modalidad</label>
+  <input
+    type="text"
+    name="modality"
+    id="modality"
+    placeholder="Ej: Ecografía"
+    style="width:100%; padding:10px; margin-bottom:12px; box-sizing:border-box;"
+  >
 
+  <label for="hospital">Hospital</label>
+  <input
+    type="text"
+    name="hospital"
+    id="hospital"
+    placeholder="Ej: Hospital de Quilpué"
+    style="width:100%; padding:10px; margin-bottom:12px; box-sizing:border-box;"
+  >
 
+  <label for="description">Descripción</label>
+  <input
+    type="text"
+    name="description"
+    id="description"
+    placeholder="Paciente1"
+    style="width:100%; padding:10px; margin-bottom:12px; box-sizing:border-box;"
+  >
 
-      <button type="submit">Egi-Transcribir</button>
-    </form>
+  <label for="speaker">Hablador</label>
+  <input
+    type="text"
+    name="speaker"
+    id="speaker"
+    placeholder="Ej: Dr. Rad"
+    style="width:100%; padding:10px; margin-bottom:12px; box-sizing:border-box;"
+  >
+
+  <button type="submit">Egi-Transcribir</button>
+</form>
+
+    
 
     {% if error %}
       <div class="error">{{ error }}</div>
     {% endif %}
 
-    {% if text %}
-      <h2>Resultado</h2>
-      <textarea readonly>{{ text }}</textarea>
-    {% endif %}
-
-    {% if download_link %}
-      <a class="download" href="{{ download_link }}">Descargar TXT</a>
-    {% endif %}
   </div>
 
   <script>

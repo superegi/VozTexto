@@ -21,6 +21,9 @@ ADMIN_USER = os.getenv("ADMIN_USER", "admin")
 ADMIN_PASSWORD = os.getenv("ADMIN_PASSWORD", "admin123")
 WHISPER_MODEL = os.getenv("WHISPER_MODEL", "large-v3-turbo")
 
+DISABLE_WHISPER = os.getenv("DISABLE_WHISPER", "false").lower() == "true"
+
+
 
 def ensure_dirs():
     UPLOAD_DIR.mkdir(parents=True, exist_ok=True)

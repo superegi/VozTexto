@@ -1,11 +1,16 @@
-from faster_whisper import WhisperModel
-from app.config import WHISPER_MODEL
+from app.config import WHISPER_MODEL, DISABLE_WHISPER
 
-
-model = WhisperModel(WHISPER_MODEL, device="cpu", compute_type="int8")
+if not DISABLE_WHISPER:
+    from faster_whisper import WhisperModel
+    model = WhisperModel(WHISPER_MODEL, device="cpu", compute_type="int8")
+else:
+    model = None
 
 
 def transcribe_audio(input_path: str):
+    if DISABLE_WHISPER:
+        return "[TRANSCRIPCIÓN DESACTIVADA PARA PRUEBAS]", 0.0
+
     segments, info = model.transcribe(input_path, language="es")
 
     texto = "\n".join(
