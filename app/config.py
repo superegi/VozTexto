@@ -19,9 +19,18 @@ MAX_FILE_SIZE = int(os.getenv("MAX_FILE_SIZE_MB", 5)) * 1024 * 1024
 MAX_CONCURRENT = int(os.getenv("MAX_CONCURRENT", 10))
 ADMIN_USER = os.getenv("ADMIN_USER", "admin")
 ADMIN_PASSWORD = os.getenv("ADMIN_PASSWORD", "admin123")
-WHISPER_MODEL = os.getenv("WHISPER_MODEL", "large-v3-turbo")
+
 
 DISABLE_WHISPER = os.getenv("DISABLE_WHISPER", "false").lower() == "true"
+
+
+
+
+WHISPER_MODEL = os.getenv("WHISPER_MODEL", "large-v3-turbo")
+WHISPER_DEVICE = os.getenv("WHISPER_DEVICE", "cpu")
+WHISPER_COMPUTE_TYPE = os.getenv("WHISPER_COMPUTE_TYPE", "int8")
+WHISPER_CPU_THREADS = int(os.getenv("WHISPER_CPU_THREADS", "4"))
+WHISPER_NUM_WORKERS = int(os.getenv("WHISPER_NUM_WORKERS", "1"))
 
 
 

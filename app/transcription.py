@@ -1,8 +1,48 @@
-from app.config import WHISPER_MODEL, DISABLE_WHISPER
+from app.config import (
+    WHISPER_MODEL,
+    DISABLE_WHISPER,
+    WHISPER_DEVICE,
+    WHISPER_COMPUTE_TYPE,
+    WHISPER_CPU_THREADS,
+    WHISPER_NUM_WORKERS,
+)
 
 if not DISABLE_WHISPER:
+    import ctranslate2
     from faster_whisper import WhisperModel
-    model = WhisperModel(WHISPER_MODEL, device="cpu", compute_type="int8")
+
+    def build_whisper_model():
+        requested_device = WHISPER_DEVICE.lower().strip()
+        requested_compute = WHISPER_COMPUTE_TYPE.lower().strip()
+
+        cuda_available = False
+        try:
+            cuda_available = ctranslate2.get_cuda_device_count() > 0
+        except Exception:
+            cuda_available = False
+
+        if requested_device == "cuda" and cuda_available:
+            device = "cuda"
+            compute_type = requested_compute
+        else:
+            device = "cpu"
+            compute_type = "int8"
+
+        print(
+            f"[Whisper] model={WHISPER_MODEL} device={device} "
+            f"compute_type={compute_type} cpu_threads={WHISPER_CPU_THREADS} "
+            f"num_workers={WHISPER_NUM_WORKERS}"
+        )
+
+        return WhisperModel(
+            WHISPER_MODEL,
+            device=device,
+            compute_type=compute_type,
+            cpu_threads=WHISPER_CPU_THREADS,
+            num_workers=WHISPER_NUM_WORKERS,
+        )
+
+    model = build_whisper_model()
 else:
     model = None
 
