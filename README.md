@@ -17,6 +17,7 @@ Aplicación web para transcribir audios a texto usando FastAPI y faster-whisper.
 ---
 
 ## Estructura del proyecto
+'''
 voz_a_texto/
 ├── app.py
 ├── data/
@@ -29,7 +30,7 @@ voz_a_texto/
 ├── dockerfile
 ├── requirements.txt
 └── templates/
-
+'''
 ￼
 
 ---
