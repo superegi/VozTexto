@@ -1,125 +1,46 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-  <meta charset="UTF-8">
-  <title>Editar transcripción</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      max-width: 1100px;
-      margin: 40px auto;
-      padding: 20px;
-      background: #f5f5f5;
-    }
+{% extends "base.html" %}
 
-    .box {
-      background: white;
-      padding: 24px;
-      border-radius: 12px;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.08);
-    }
+{% block title %}AIRO · Editar{% endblock %}
 
-    textarea, input[type="text"], input[type="date"] {
-      width: 100%;
-      padding: 12px;
-      box-sizing: border-box;
-      font-size: 14px;
-      margin-top: 10px;
-      margin-bottom: 16px;
-    }
+{% block topnav %}
+  <a href="/">+ Nueva transcripción</a>
+  <a class="secondary" href="/historial">Historial</a>
+  <a class="secondary" href="/logout">Salir</a>
+{% endblock %}
 
-    textarea {
-      min-height: 280px;
-    }
+{% block content %}
+  <div class="card">
+    <h2 class="card-title">Editar transcripción</h2>
 
-    pre {
-      white-space: pre-wrap;
-      word-break: break-word;
-      background: #fafafa;
-      padding: 12px;
-      border-radius: 8px;
-      border: 1px solid #ddd;
-    }
+    <div class="grid grid-2" style="margin-bottom:18px;">
+      <div class="card" style="padding:16px;">
+        <div class="muted">Archivo</div>
+        <div style="font-weight:700; margin-top:6px;">{{ row["original_filename"] }}</div>
+      </div>
 
-    button {
-      padding: 10px 18px;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-      margin-right: 8px;
-      margin-bottom: 8px;
-    }
-
-    a {
-      text-decoration: none;
-      color: #2d7ef7;
-    }
-
-    label {
-      font-weight: bold;
-      display: block;
-      margin-top: 8px;
-    }
-
-    .audio-box {
-      background: #fafafa;
-      padding: 16px;
-      border-radius: 10px;
-      border: 1px solid #ddd;
-      margin-bottom: 24px;
-    }
-
-    .audio-controls {
-      margin-top: 12px;
-      margin-bottom: 12px;
-    }
-
-    .progress-row {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      margin-top: 10px;
-    }
-
-    .progress-row input[type="range"] {
-      flex: 1;
-    }
-
-    .time-label {
-      font-size: 14px;
-      color: #444;
-      min-width: 110px;
-      text-align: right;
-    }
-  </style>
-</head>
-<body>
-  <div class="box">
-    <p><a href="/historial">← Volver al historial</a></p>
-
-    <h1>Editar transcripción</h1>
-
-    <p><b>Archivo:</b> {{ row["original_filename"] }}</p>
-    <p><b>Usuario:</b> {{ row["username"] if row["username"] else "-" }}</p>
+      <div class="card" style="padding:16px;">
+        <div class="muted">Usuario</div>
+        <div style="font-weight:700; margin-top:6px;">{{ row["username"] if row["username"] else "-" }}</div>
+      </div>
+    </div>
 
     <div class="audio-box">
-      <h2>Audio</h2>
+      <h3 class="card-title" style="margin-bottom:12px;">Audio</h3>
 
-      <audio id="audioPlayer" preload="metadata">
+      <audio id="audioPlayer" preload="metadata" style="width:100%;">
         <source src="/audio/{{ row['id'] }}">
         Tu navegador no soporta audio HTML5.
       </audio>
 
       <div class="audio-controls">
         <button type="button" onclick="playAudio()">Play</button>
-        <button type="button" onclick="pauseAudio()">Pause</button>
-        <button type="button" onclick="seekAudio(-15)">-15 s</button>
-        <button type="button" onclick="seekAudio(-10)">-10 s</button>
-        <button type="button" onclick="seekAudio(-5)">-5 s</button>
-        <button type="button" onclick="seekAudio(5)">+5 s</button>
-        <button type="button" onclick="seekAudio(10)">+10 s</button>
-        <button type="button" onclick="seekAudio(15)">+15 s</button>
+        <button type="button" class="secondary" onclick="pauseAudio()">Pause</button>
+        <button type="button" class="secondary" onclick="seekAudio(-15)">-15 s</button>
+        <button type="button" class="secondary" onclick="seekAudio(-10)">-10 s</button>
+        <button type="button" class="secondary" onclick="seekAudio(-5)">-5 s</button>
+        <button type="button" class="secondary" onclick="seekAudio(5)">+5 s</button>
+        <button type="button" class="secondary" onclick="seekAudio(10)">+10 s</button>
+        <button type="button" class="secondary" onclick="seekAudio(15)">+15 s</button>
       </div>
 
       <div class="progress-row">
@@ -128,25 +49,38 @@
       </div>
     </div>
 
-    <h2>Texto transcrito</h2>
-    <pre>{{ row["transcribed_text"] }}</pre>
+    <div class="card text-original" style="margin-top:18px;">
+      <h3 class="card-title">Texto transcrito</h3>
+      <pre class="original-text">{{ row["transcribed_text"] }}</pre>
+    </div>
 
-    <h2>Edición final</h2>
-    <form method="post">
-      <label for="exam_date">Fecha examen</label>
-      <input type="date" name="exam_date" id="exam_date" value="{{ row['exam_date'] if row['exam_date'] else '' }}">
+    <div class="card text-final" style="margin-top:18px;">
+      <h3 class="card-title">Edición final</h3>
 
-      <label for="hospital">Hospital</label>
-      <input type="text" name="hospital" id="hospital" value="{{ row['hospital'] if row['hospital'] else '' }}">
+      <form method="post">
+        <div class="grid grid-2">
+          <div>
+            <label for="exam_date">Fecha examen</label>
+            <input type="date" name="exam_date" id="exam_date" value="{{ row['exam_date'] if row['exam_date'] else '' }}">
+          </div>
 
-      <label for="modality">Modalidad</label>
-      <input type="text" name="modality" id="modality" value="{{ row['modality'] if row['modality'] else '' }}">
+          <div>
+            <label for="hospital">Hospital</label>
+            <input type="text" name="hospital" id="hospital" value="{{ row['hospital'] if row['hospital'] else '' }}">
+          </div>
 
-      <label for="final_text">Texto final</label>
-      <textarea name="final_text" id="final_text">{% if row["final_text"] %}{{ row["final_text"] }}{% else %}{{ row["transcribed_text"] }}{% endif %}</textarea>
+          <div>
+            <label for="modality">Modalidad</label>
+            <input type="text" name="modality" id="modality" value="{{ row['modality'] if row['modality'] else '' }}">
+          </div>
+        </div>
 
-      <button type="submit">Guardar</button>
-    </form>
+        <label for="final_text">Texto final</label>
+        <textarea name="final_text" id="final_text">{% if row["final_text"] %}{{ row["final_text"] }}{% else %}{{ row["transcribed_text"] }}{% endif %}</textarea>
+
+        <button type="submit">Guardar cambios</button>
+      </form>
+    </div>
   </div>
 
   <script>
@@ -198,5 +132,4 @@
       }
     });
   </script>
-</body>
-</html>
+{% endblock %}

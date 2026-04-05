@@ -1,140 +1,99 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-  <meta charset="UTF-8">
-  <title>Historial de transcripciones</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      max-width: 1500px;
-      margin: 40px auto;
-      padding: 20px;
-      background: #f5f5f5;
-    }
+{% extends "base.html" %}
 
-    .box {
-      background: white;
-      padding: 24px;
-      border-radius: 12px;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.08);
-    }
+{% block title %}AIRO · Historial{% endblock %}
 
-    h1 {
-      margin-top: 0;
-    }
+{% block topnav %}
+  <a href="/">+ Nueva transcripción</a>
+  <a class="secondary" href="/historial">Historial</a>
 
-    a {
-      text-decoration: none;
-      color: #2d7ef7;
-    }
+  {% if current_user and current_user["is_admin"] %}
+    <a class="secondary" href="/admin/usuarios">Usuarios</a>
+  {% endif %}
 
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 20px;
-      font-size: 14px;
-    }
+  <a class="secondary" href="/logout">Salir</a>
+{% endblock %}
 
-    th, td {
-      border-bottom: 1px solid #ddd;
-      text-align: left;
-      padding: 10px;
-      vertical-align: top;
-    }
+{% block content %}
+  <div class="card">
+    <h2 class="card-title">Historial de transcripciones</h2>
 
-    th {
-      background: #fafafa;
-    }
+    <div class="muted" style="margin-bottom:16px;">
+      Revisión y acceso rápido a audios, textos y ediciones finales.
+    </div>
 
-    .estado-ok {
-      color: green;
-      font-weight: bold;
-    }
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Fecha</th>
+            <th>Fecha examen</th>
+            <th>Hospital</th>
+            <th>Modalidad</th>
+            <th>Archivo</th>
+            {% if current_user["is_admin"] %}
+              <th>Usuario</th>
+            {% endif %}
+            <th>Descripción</th>
+            <th>Hablador</th>
+            <th>Tamaño</th>
+            {% if current_user["is_admin"] %}
+              <th>Duración</th>
+              <th>Proceso</th>
+              <th>Estado</th>
+              <th>Cambio caracteres</th>
+            {% endif %}
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for row in rows %}
+          <tr>
+            <td>{{ row["id"] }}</td>
+            <td>{{ row["created_at"] }}</td>
+            <td>{{ row["exam_date"] if row["exam_date"] else "-" }}</td>
+            <td>{{ row["hospital"] if row["hospital"] else "-" }}</td>
+            <td>{{ row["modality"] if row["modality"] else "-" }}</td>
+            <td>{{ row["original_filename"] }}</td>
 
-    .estado-error {
-      color: red;
-      font-weight: bold;
-    }
+            {% if current_user["is_admin"] %}
+              <td>{{ row["username"] if row["username"] else "-" }}</td>
+            {% endif %}
 
-    .acciones a {
-      display: inline-block;
-      margin-right: 8px;
-      margin-bottom: 6px;
-    }
-  </style>
-</head>
-<body>
-  <div class="box">
-    <h1>Historial de transcripciones</h1>
-    <p><a href="/">← Volver al inicio</a></p>
+            <td>{{ row["description"] if row["description"] else "-" }}</td>
+            <td>{{ row["speaker"] if row["speaker"] else "-" }}</td>
+            <td>{{ row["file_size_bytes"] }} bytes</td>
 
-    <table>
-      <thead>
-        <tr>
-          <th>ID</th>
-          <th>Fecha</th>
-          <th>Fecha examen</th>
-          <th>Hospital</th>
-          <th>Modalidad</th>
-          <th>Archivo</th>
-          {% if current_user["is_admin"] %}
-            <th>Usuario</th>
-          {% endif %}
-          <th>Descripción</th>
-          <th>Hablador</th>
-          <th>Tamaño</th>
-          {% if current_user["is_admin"] %}
-            <th>Duración</th>
-            <th>Proceso</th>
-            <th>Estado</th>
-            <th>Cambio caracteres</th>
-          {% endif %}
-          <th>Acciones</th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for row in rows %}
-        <tr>
-          <td>{{ row["id"] }}</td>
-          <td>{{ row["created_at"] }}</td>
-          <td>{{ row["exam_date"] if row["exam_date"] else "-" }}</td>
-          <td>{{ row["hospital"] if row["hospital"] else "-" }}</td>
-          <td>{{ row["modality"] if row["modality"] else "-" }}</td>
-          <td>{{ row["original_filename"] }}</td>
-          {% if current_user["is_admin"] %}
-            <td>{{ row["username"] if row["username"] else "-" }}</td>
-          {% endif %}
-          <td>{{ row["description"] if row["description"] else "-" }}</td>
-          <td>{{ row["speaker"] if row["speaker"] else "-" }}</td>
-          <td>{{ row["file_size_bytes"] }} bytes</td>
-          {% if current_user["is_admin"] %}
+            {% if current_user["is_admin"] %}
+              <td>
+                {% if row["duration_seconds"] is not none %}
+                  {{ row["duration_seconds"] }} s
+                {% else %}
+                  -
+                {% endif %}
+              </td>
+              <td>{{ row["processing_seconds"] }} s</td>
+              <td>
+                {% if row["status"] == "ok" %}
+                  <span class="badge badge-ok">OK</span>
+                {% else %}
+                  <span class="badge badge-error">ERROR</span>
+                {% endif %}
+              </td>
+              <td>{{ row["character_changes"] }}</td>
+            {% endif %}
+
             <td>
-              {% if row["duration_seconds"] is not none %}
-                {{ row["duration_seconds"] }} s
-              {% else %}
-                -
-              {% endif %}
+              <div class="actions">
+                <a href="/editar/{{ row['id'] }}">Editar</a>
+                <a href="/descargar_texto_historial/{{ row['id'] }}">Descargar texto</a>
+                <a href="/descargar_audio_historial/{{ row['id'] }}">Descargar audio</a>
+              </div>
             </td>
-            <td>{{ row["processing_seconds"] }} s</td>
-            <td>
-              {% if row["status"] == "ok" %}
-                <span class="estado-ok">OK</span>
-              {% else %}
-                <span class="estado-error">ERROR</span>
-              {% endif %}
-            </td>
-            <td>{{ row["character_changes"] }}</td>
-          {% endif %}
-          <td class="acciones">
-            <a href="/editar/{{ row['id'] }}">Editar</a><br>
-            <a href="/descargar_texto_historial/{{ row['id'] }}">Descargar texto</a><br>
-            <a href="/descargar_audio_historial/{{ row['id'] }}">Descargar audio</a>
-          </td>
-        </tr>
-        {% endfor %}
-      </tbody>
-    </table>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
   </div>
-</body>
-</html>
+{% endblock %}

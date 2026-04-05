@@ -309,6 +309,7 @@ def historial(request: Request):
 @router.get("/admin/usuarios", response_class=HTMLResponse)
 def admin_usuarios_form(request: Request):
     current_user = require_login(request)
+    print("DEBUG admin_usuarios_form session:", dict(request.session))
     if not current_user:
         return RedirectResponse(url="/login", status_code=302)
 

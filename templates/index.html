@@ -1,161 +1,83 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-  <meta charset="UTF-8">
-  <title>Voz a Texto</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+{% extends "base.html" %}
 
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      max-width: 900px;
-      margin: 40px auto;
-      padding: 20px;
-      background: #f5f5f5;
-    }
+{% block title %}AIRO · Inicio{% endblock %}
 
-    .box {
-      background: white;
-      padding: 24px;
-      border-radius: 12px;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.08);
-    }
-
-    .dropzone {
-      border: 2px dashed #aaa;
-      border-radius: 12px;
-      padding: 40px;
-      text-align: center;
-      margin-top: 20px;
-      cursor: pointer;
-      transition: 0.2s;
-    }
-
-    .dropzone.dragover {
-      border-color: #2d7ef7;
-      background: #eef5ff;
-    }
-
-    input[type="file"] {
-      display: none;
-    }
-
-    button {
-      padding: 10px 18px;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-      margin-top: 10px;
-    }
-
-    textarea {
-      width: 100%;
-      min-height: 280px;
-      margin-top: 12px;
-      padding: 10px;
-      font-size: 14px;
-    }
-
-    .error {
-      margin-top: 16px;
-      padding: 12px;
-      border-radius: 8px;
-      background: #ffe5e5;
-      color: #8a1f1f;
-    }
-
-    .download {
-      display: inline-block;
-      margin-top: 12px;
-      text-decoration: none;
-      padding: 10px 16px;
-      background: #2d7ef7;
-      color: white;
-      border-radius: 8px;
-    }
-  </style>
-</head>
-<body>
-
-<p>
-  Usuario: <b>{{ username }}</b>
-  | <a href="/logout">Salir</a>
-</p>
-
-<p>
-  <a href="/historial">Ver historial</a>
+{% block topnav %}
+  <a class="secondary" href="/historial">Historial</a>
   {% if current_user and current_user["is_admin"] %}
-    | <a href="/admin/usuarios">Crear usuarios</a>
+    <a class="secondary" href="/admin/usuarios">Usuarios</a>
   {% endif %}
-</p>
+  <a class="secondary" href="/logout">Salir</a>
+{% endblock %}
 
+{% block content %}
+  <div class="hero">
+    <div class="card hero-copy">
+      <h2>Sube tu audio y conviértelo en texto clínico editable.</h2>
+      <p>
+        AIRO centraliza la carga de audio, la transcripción y la edición final
+        en una interfaz rápida, clara y eficiente.
+      </p>
 
+      <div style="margin-top:18px;" class="muted">
+        Usuario activo: <b>{{ username }}</b>
+      </div>
+    </div>
 
-  <div class="box">
-
-    <h1>Voz a Texto</h1>
-
-<form id="form" action="/transcribir" method="post" enctype="multipart/form-data">
-  <div id="dropzone" class="dropzone">
-    Arrastra tu audio aquí<br>
-    <small>o haz click para seleccionar</small>
+    <div class="logo-panel">
+      <img src="/static/img/airo-logo.png" alt="AIRO logo">
+    </div>
   </div>
 
-  <input type="file" name="audio" id="fileInput" accept=".wav, .mp3, .m4a, .flac, .ogg, .webm" required>
+  <div class="card" style="margin-top:22px;">
+    <h3 class="card-title">Nueva transcripción</h3>
 
-  <label for="exam_date">Fecha del examen a transcribir</label>
-  <input
-    type="date"
-    name="exam_date"
-    id="exam_date"
-    style="width:100%; padding:10px; margin-bottom:12px; box-sizing:border-box;"
-  >
+    <form id="form" action="/transcribir" method="post" enctype="multipart/form-data">
 
-  <label for="modality">Modalidad</label>
-  <input
-    type="text"
-    name="modality"
-    id="modality"
-    placeholder="Ej: Ecografía"
-    style="width:100%; padding:10px; margin-bottom:12px; box-sizing:border-box;"
-  >
+      <div id="dropzone" class="dropzone">
+        <div style="font-size:20px; font-weight:800; margin-bottom:8px;">
+          Arrastra tu audio aquí
+        </div>
+        <div class="muted">o haz clic para seleccionar un archivo</div>
+      </div>
 
-  <label for="hospital">Hospital</label>
-  <input
-    type="text"
-    name="hospital"
-    id="hospital"
-    placeholder="Ej: Hospital de Quilpué"
-    style="width:100%; padding:10px; margin-bottom:12px; box-sizing:border-box;"
-  >
+      <input type="file" name="audio" id="fileInput"
+             accept=".wav, .mp3, .m4a, .flac, .ogg, .webm" required>
 
-  <label for="description">Descripción</label>
-  <input
-    type="text"
-    name="description"
-    id="description"
-    placeholder="Paciente1"
-    style="width:100%; padding:10px; margin-bottom:12px; box-sizing:border-box;"
-  >
+      <div class="grid grid-2">
+        <div>
+          <label for="exam_date">Fecha del examen</label>
+          <input type="date" name="exam_date" id="exam_date">
+        </div>
 
-  <label for="speaker">Hablador</label>
-  <input
-    type="text"
-    name="speaker"
-    id="speaker"
-    placeholder="Ej: Dr. Rad"
-    style="width:100%; padding:10px; margin-bottom:12px; box-sizing:border-box;"
-  >
+        <div>
+          <label for="modality">Modalidad</label>
+          <input type="text" name="modality" id="modality" placeholder="Ej: Ecografía">
+        </div>
 
-  <button type="submit">Egi-Transcribir</button>
-</form>
+        <div>
+          <label for="hospital">Hospital</label>
+          <input type="text" name="hospital" id="hospital" placeholder="Ej: Hospital X">
+        </div>
 
-    
+        <div>
+          <label for="speaker">Hablador</label>
+          <input type="text" name="speaker" id="speaker" placeholder="Ej: Dr. Pérez">
+        </div>
+      </div>
+
+      <label for="description">Descripción</label>
+      <input type="text" name="description" id="description"
+             placeholder="Ej: Ecografía abdominal control">
+
+      <button type="submit">Transcribir con AIRO</button>
+    </form>
 
     {% if error %}
-      <div class="error">{{ error }}</div>
+      <div class="notice error" style="margin-top:16px;">
+        {{ error }}
+      </div>
     {% endif %}
-
   </div>
 
   <script>
@@ -180,15 +102,20 @@
       const files = e.dataTransfer.files;
       if (files.length > 0) {
         fileInput.files = files;
-        dropzone.innerHTML = "📁 " + files[0].name;
+        dropzone.innerHTML = `
+          <div style="font-size:18px; font-weight:800;">📁 ${files[0].name}</div>
+          <div class="muted" style="margin-top:8px;">Archivo listo para transcribir</div>
+        `;
       }
     });
 
     fileInput.addEventListener("change", () => {
       if (fileInput.files.length > 0) {
-        dropzone.innerHTML = "📁 " + fileInput.files[0].name;
+        dropzone.innerHTML = `
+          <div style="font-size:18px; font-weight:800;">📁 ${fileInput.files[0].name}</div>
+          <div class="muted" style="margin-top:8px;">Archivo listo para transcribir</div>
+        `;
       }
     });
   </script>
-</body>
-</html>
+{% endblock %}
