@@ -22,12 +22,14 @@ logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger("voz_a_texto")
 
 BASE_DIR = Path(__file__).resolve().parent
-UPLOAD_DIR = BASE_DIR / "uploads"
-OUTPUT_DIR = BASE_DIR / "outputs"
+DATA_DIR = BASE_DIR / "data"
+
+UPLOAD_DIR = DATA_DIR / "uploads"
+OUTPUT_DIR = DATA_DIR / "outputs"
 TEMPLATES_DIR = BASE_DIR / "templates"
-HISTORY_AUDIO_DIR = BASE_DIR / "history_audio"
-HISTORY_TEXT_DIR = BASE_DIR / "history_text"
-DB_PATH = BASE_DIR / "history.db"
+HISTORY_AUDIO_DIR = DATA_DIR / "history_audio"
+HISTORY_TEXT_DIR = DATA_DIR / "history_text"
+DB_PATH = DATA_DIR / "db" / "history.db"
 
 UPLOAD_DIR.mkdir(exist_ok=True)
 OUTPUT_DIR.mkdir(exist_ok=True)

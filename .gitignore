@@ -9,22 +9,21 @@ __pycache__/
 venv/
 env/
 
-# Base de datos
-*.db
-*.sqlite
-*.sqlite3
-
 # Variables sensibles
 .env
 
-# DATA (ignorar contenido pero no estructura)
-data/*
+# Ignorar todo dentro de data
+data/**
+
+# Pero conservar la estructura de carpetas
+!data/
 !data/uploads/
 !data/outputs/
 !data/history_audio/
 !data/history_text/
 !data/db/
 
+# Y conservar solo los .gitkeep
 !data/uploads/.gitkeep
 !data/outputs/.gitkeep
 !data/history_audio/.gitkeep
