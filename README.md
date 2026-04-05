@@ -57,9 +57,11 @@ cd VozTexto
 ```
 
 2. Levantar la aplicación
-￼```bash
+
+```bash
 docker compose up --build
 ```
+
 3. Abrir en navegador
 ￼
 http://localhost:8000
@@ -81,14 +83,10 @@ Descargar resultado o revisar historial
 
 Formatos soportados
 - wav
-
-mp3
-
-m4a
-
-flac
-
-ogg
+- mp3
+- m4a 
+- flac
+- ogg
 
 Límites
 Tamaño máximo: 5 MB
@@ -97,60 +95,57 @@ Máximo 10 transcripciones simultáneas
 
 Persistencia de datos
 Todo se guarda en la carpeta data/:
-
-audios
-
-textos
-
-historial
-
-base de datos
+- audios
+- textos
+- historial
+- base de datos
 
 Esta carpeta NO se sube a GitHub (solo su estructura).
 
 Comandos útiles
 Levantar
-Bash
+```bash
 ￼
 docker compose up --build
+```
 Detener
-Bash
-￼
+```bash
 docker compose down
+```
 Logs
-Bash
-￼
+```bash
 docker compose logs -f
+```
+
 Instalación sin Docker (opcional)
-Bash
-￼
+```bash
 python3 -m venv .venv
 source .venv/bin/activate
 pip install -r requirements.txt
 uvicorn app:app --reload
+```
+
 Luego abrir:
 
-￼
 http://localhost:8000
+
 Problemas comunes
 Error: fastapi no encontrado
 Significa que no instalaste dependencias o no usas entorno virtual.
 
 Solución:
 
-usar Docker
-
-o instalar requirements
+usar Docker o instalar requirements
 
 La página no carga
 Probablemente está descargando el modelo Whisper.
 
 Revisar:
-
-Bash
-￼
+```bash
 docker compose logs -f
+```
+
 Problemas de permisos
-Bash
-￼
+```bash
 sudo chown -R $USER:$USER data
+```
