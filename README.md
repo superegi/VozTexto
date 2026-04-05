@@ -31,7 +31,7 @@ voz_a_texto/
 ├── requirements.txt
 └── templates/
 ```
-￼
+
 
 ---
 
@@ -63,9 +63,10 @@ docker compose up --build
 ```
 
 ### 3. Abrir en navegador
-￼
+
 http://localhost:8000
 
+-------------
 
 ### Primera ejecución
 La primera vez puede tardar más porque se descarga el modelo Whisper.
@@ -73,16 +74,12 @@ La primera vez puede tardar más porque se descarga el modelo Whisper.
 Esto es normal.
 
 ## Uso
-### Abrir la página web
+- Abrir la página web
+- Ingresar nombre de usuario
+- Subir audio
+- Obtener transcripción
 
-### Ingresar nombre de usuario
-
-### Subir audio
-
-### Obtener transcripción
-
-### Formatos soportados
-
+## Formatos soportados 
 - wav
 - mp3
 - m4a 
@@ -136,8 +133,9 @@ Luego abrir:
 
 http://localhost:8000
 
-Problemas comunes
+## Problemas comunes
 Error: fastapi no encontrado
+
 Significa que no instalaste dependencias o no usas entorno virtual.
 
 Solución:
@@ -145,6 +143,7 @@ Solución:
 usar Docker o instalar requirements
 
 La página no carga
+
 Probablemente está descargando el modelo Whisper.
 
 Revisar:
