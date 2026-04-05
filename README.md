@@ -17,7 +17,7 @@ Aplicación web para transcribir audios a texto usando FastAPI y faster-whisper.
 ---
 
 ## Estructura del proyecto
-'''
+```bash
 voz_a_texto/
 ├── app.py
 ├── data/
@@ -30,7 +30,7 @@ voz_a_texto/
 ├── dockerfile
 ├── requirements.txt
 └── templates/
-'''
+```
 ￼
 
 ---
@@ -56,44 +56,47 @@ git clone https://github.com/superegi/VozTexto.git
 cd VozTexto
 ```
 
-2. Levantar la aplicación
+### 2. Levantar la aplicación
 
 ```bash
 docker compose up --build
 ```
 
-3. Abrir en navegador
+### 3. Abrir en navegador
 ￼
 http://localhost:8000
-Primera ejecución
+
+
+### Primera ejecución
 La primera vez puede tardar más porque se descarga el modelo Whisper.
 
 Esto es normal.
 
-Uso
-Abrir la página web
+## Uso
+### Abrir la página web
 
-Ingresar nombre de usuario
+### Ingresar nombre de usuario
 
-Subir audio
+### Subir audio
 
-Obtener transcripción
+### Obtener transcripción
 
-Descargar resultado o revisar historial
+### Formatos soportados
 
-Formatos soportados
 - wav
 - mp3
 - m4a 
 - flac
 - ogg
 
-Límites
+## Límites
+
 Tamaño máximo: 5 MB
 
 Máximo 10 transcripciones simultáneas
 
-Persistencia de datos
+## Persistencia de datos
+
 Todo se guarda en la carpeta data/:
 - audios
 - textos
@@ -102,22 +105,26 @@ Todo se guarda en la carpeta data/:
 
 Esta carpeta NO se sube a GitHub (solo su estructura).
 
-Comandos útiles
-Levantar
+## Comandos útiles
+
+### Levantar
+
 ```bash
 ￼
 docker compose up --build
 ```
-Detener
+### Detener
+
 ```bash
 docker compose down
 ```
-Logs
+### Logs
+
 ```bash
 docker compose logs -f
 ```
 
-Instalación sin Docker (opcional)
+## Instalación sin Docker (opcional)
 ```bash
 python3 -m venv .venv
 source .venv/bin/activate
