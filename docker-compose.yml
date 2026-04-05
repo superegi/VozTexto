@@ -1,0 +1,11 @@
+version: "3.9"
+
+services:
+  voz-a-texto:
+    build: .
+    container_name: voz_a_texto
+    ports:
+      - "8000:8000"
+    volumes:      
+      - ./data:/app/data
+    restart: unless-stopped

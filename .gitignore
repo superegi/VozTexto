@@ -1,0 +1,32 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Entornos
+.venv/
+venv/
+env/
+
+# Base de datos
+*.db
+*.sqlite
+*.sqlite3
+
+# Variables sensibles
+.env
+
+# DATA (ignorar contenido pero no estructura)
+data/*
+!data/uploads/
+!data/outputs/
+!data/history_audio/
+!data/history_text/
+!data/db/
+
+!data/uploads/.gitkeep
+!data/outputs/.gitkeep
+!data/history_audio/.gitkeep
+!data/history_text/.gitkeep
+!data/db/.gitkeep

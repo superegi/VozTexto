@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Voz a Texto</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 900px;
+      margin: 40px auto;
+      padding: 20px;
+      background: #f5f5f5;
+    }
+
+    .box {
+      background: white;
+      padding: 24px;
+      border-radius: 12px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+    }
+
+    .dropzone {
+      border: 2px dashed #aaa;
+      border-radius: 12px;
+      padding: 40px;
+      text-align: center;
+      margin-top: 20px;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+
+    .dropzone.dragover {
+      border-color: #2d7ef7;
+      background: #eef5ff;
+    }
+
+    input[type="file"] {
+      display: none;
+    }
+
+    button {
+      padding: 10px 18px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      margin-top: 10px;
+    }
+
+    textarea {
+      width: 100%;
+      min-height: 280px;
+      margin-top: 12px;
+      padding: 10px;
+      font-size: 14px;
+    }
+
+    .error {
+      margin-top: 16px;
+      padding: 12px;
+      border-radius: 8px;
+      background: #ffe5e5;
+      color: #8a1f1f;
+    }
+
+    .download {
+      display: inline-block;
+      margin-top: 12px;
+      text-decoration: none;
+      padding: 10px 16px;
+      background: #2d7ef7;
+      color: white;
+      border-radius: 8px;
+    }
+  </style>
+</head>
+<body>
+
+<p>Usuario: <b>{{ username }}</b> | <a href="/logout">Salir</a></p>
+
+<a href="/historial">Ver historial</a>
+
+  <div class="box">
+
+    <h1>Voz a Texto</h1>
+
+    <form id="form" action="/transcribir" method="post" enctype="multipart/form-data">
+      <div id="dropzone" class="dropzone">
+        Arrastra tu audio aquí<br>
+        <small>o haz click para egi-seleccionar</small>
+      </div>
+
+      <input type="file" name="audio" id="fileInput" accept=".wav, .mp3, .m4a, .flac, .ogg, .webm" required>
+
+      <label for="description">Descripción</label>
+<input
+  type="text"
+  name="description"
+  id="description"
+  placeholder="Paciente1"
+  style="width:100%; padding:10px; margin-bottom:12px; box-sizing:border-box;"
+>
+
+<label for="speaker">Hablador</label>
+<input
+  type="text"
+  name="speaker"
+  id="speaker"
+  placeholder="Ej: Dr. Rad"
+  style="width:100%; padding:10px; margin-bottom:12px; box-sizing:border-box;"
+>
+
+
+
+      <button type="submit">Egi-Transcribir</button>
+    </form>
+
+    {% if error %}
+      <div class="error">{{ error }}</div>
+    {% endif %}
+
+    {% if text %}
+      <h2>Resultado</h2>
+      <textarea readonly>{{ text }}</textarea>
+    {% endif %}
+
+    {% if download_link %}
+      <a class="download" href="{{ download_link }}">Descargar TXT</a>
+    {% endif %}
+  </div>
+
+  <script>
+    const dropzone = document.getElementById("dropzone");
+    const fileInput = document.getElementById("fileInput");
+
+    dropzone.addEventListener("click", () => fileInput.click());
+
+    dropzone.addEventListener("dragover", (e) => {
+      e.preventDefault();
+      dropzone.classList.add("dragover");
+    });
+
+    dropzone.addEventListener("dragleave", () => {
+      dropzone.classList.remove("dragover");
+    });
+
+    dropzone.addEventListener("drop", (e) => {
+      e.preventDefault();
+      dropzone.classList.remove("dragover");
+
+      const files = e.dataTransfer.files;
+      if (files.length > 0) {
+        fileInput.files = files;
+        dropzone.innerHTML = "📁 " + files[0].name;
+      }
+    });
+
+    fileInput.addEventListener("change", () => {
+      if (fileInput.files.length > 0) {
+        dropzone.innerHTML = "📁 " + fileInput.files[0].name;
+      }
+    });
+  </script>
+</body>
+</html>
